@@ -6,8 +6,13 @@ import com.example.favcountries.data.CVData
 
 class CVDataRepository(private val dataDao: AddDataDao) {
     val allCandidates:LiveData<List<CVData>> = dataDao.getAllCandidates()
-    val getProfile:LiveData<CVData> = dataDao.getProfile("Deepali Shinde")
+    //val getProfile:LiveData<CVData> = dataDao.getProfile("Deepali Shinde")
     suspend fun insert(cvData: CVData) {
      dataDao.insertCV(cvData)
     }
+
+    fun getProfile(profile:String):LiveData<CVData> {
+       return dataDao.getProfile(profile)
+    }
+
 }

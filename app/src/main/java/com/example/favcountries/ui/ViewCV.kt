@@ -3,9 +3,11 @@ package com.example.favcountries.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.favcountries.R
 import com.example.favcountries.data.CVData
+import com.example.favcountries.data.Utilities
 import com.example.favcountries.viewmodel.candidateModel
 
 class ViewCV : AppCompatActivity(){
@@ -17,11 +19,14 @@ class ViewCV : AppCompatActivity(){
     lateinit var educationTxt: TextView
     lateinit var projectTxt: TextView
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_cv)
 
         val viewModel :candidateModel
+
+        val pref = Utilities("Data",this)
 
         candidateTxt = findViewById(R.id.profileNameTxt)
         objectiveTxt = findViewById(R.id.objectivesTxt)
@@ -32,7 +37,8 @@ class ViewCV : AppCompatActivity(){
 
         viewModel= ViewModelProvider(this,ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(candidateModel::class.java)
 
-        viewModel.profiles.observe(this,{ data ->data.let { updateUI(data) } })
+        pref.getValues("Profile")
+            ?.let { viewModel.getProfileData(it).observe(this,{ list->list.let { updateUI(it) }}) }
 
     }
     fun updateUI(cv:CVData){

@@ -11,16 +11,20 @@ import kotlinx.coroutines.launch
 class candidateModel(application: Application): AndroidViewModel(application) {
     val candi : LiveData<List<CVData>>
     val repository : CVDataRepository
-    val profiles : LiveData<CVData>
+    //val profiles : LiveData<CVData>
 
     init {
         val dao = CVS.getInInstance(application).addDataDao()
         repository = CVDataRepository(dao)
         candi = repository.allCandidates
-        profiles = repository.getProfile
+       // profiles = repository.getProfile
     }
 
     fun addCV(cvData: CVData) = viewModelScope.launch(Dispatchers.IO) {
        repository.insert(cvData)
+    }
+
+    fun getProfileData(profile:String):LiveData<CVData>{
+        return repository.getProfile(profile)
     }
 }
